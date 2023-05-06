@@ -1,3 +1,4 @@
+import { GiConsoleController } from 'react-icons/gi';
 import baseStyled, {
   css,
   CSSProp,
@@ -7,7 +8,7 @@ import baseStyled, {
 const sizes: { [key: string]: number } = {
   desktop: 1024,
   tablet: 768,
-  mobile: 320,
+  mobile: 480,
 };
 
 type BackQuoteArgs = string[];
@@ -36,15 +37,15 @@ Object.keys(sizes).reduce((acc: Media, label: string) => {
     case 'tablet':
       acc.tablet = (...args: BackQuoteArgs) => css`
         @media screen and (max-width: ${sizes.desktop -
-          1}px) and (min-width: ${sizes.tablet}px) {
+          1}px) and (min-width: ${sizes.mobile}px) {
           ${args}
         }
       `;
       break;
     case 'mobile':
       acc.mobile = (...args: BackQuoteArgs) => css`
-        @media screen and (max-width: ${sizes.tablet -
-          1}px) and (min-width: ${sizes.mobile}px) {
+        @media screen and (max-width: ${sizes.mobile -
+          1}px) and (min-width: 0px) {
           ${args}
         }
       `;
