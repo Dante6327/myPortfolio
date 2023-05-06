@@ -92,6 +92,7 @@ export const List = styled.li`
   }
 
   ${({ theme }) => theme.media.tablet`
+    padding: 0px 10px;
     font-size:12px;
   `}
 

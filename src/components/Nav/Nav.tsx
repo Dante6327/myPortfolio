@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { navigationHeight } from 'src/recoil';
 import type { HandleClick, HandleToggle } from './types';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import homeLogo from 'src/assets/images/home-logo.png';
@@ -9,9 +11,9 @@ import instagram from 'src/assets/images/instagram.png';
 import * as S from './Nav.style';
 
 const Nav = () => {
+  const setNavHeight = useSetRecoilState<number>(navigationHeight);
   const [isToggle, setIsToggle] = useState<boolean>(false);
-  const widthRef = useRef<HTMLDivElement>(null);
-
+  const navRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const handleClick: HandleClick = path => {
     navigate(`/${path}`);
@@ -21,9 +23,25 @@ const Nav = () => {
     setIsToggle(!isToggle);
   };
 
+  useEffect(() => {
+    const element = navRef?.current;
+    if (!element) return;
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setNavHeight(entry.borderBoxSize[0].blockSize);
+      }
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   const handleRouter = (path: string) => () => handleClick(path);
   return (
-    <S.Nav ref={widthRef}>
+    <S.Nav ref={navRef}>
       <S.Home>
         <S.MenuList onClick={handleToggle}>
           <GiHamburgerMenu />
@@ -59,8 +77,8 @@ const Nav = () => {
 
 export default Nav;
 const MENU_LIST = [
-  { id: 1, menu: 'Intro' },
-  { id: 2, menu: 'About' },
-  { id: 3, menu: 'Skills' },
-  { id: 4, menu: 'Portfolio' },
+  { id: 1, menu: 'About' },
+  { id: 2, menu: 'Skills' },
+  { id: 3, menu: 'Portfolio' },
+  { id: 4, menu: 'Contact' },
 ];
